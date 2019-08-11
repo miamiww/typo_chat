@@ -1,8 +1,7 @@
 chatbody {
     position: absolute;
-    left: 15%;
-    margin-left: -50px;
-    top: 80px;
+    margin-left: 0px;
+    top: 150px;
     background-color: #00e1ff;
     width: 500px;
     height: 400px;
