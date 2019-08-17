@@ -1,4 +1,4 @@
-//GLOBAL VARIABLES
+//** */ GLOBAL VARIABLES **//
 let canvas;
 //dom elements
 let nameInput, msgInput;
@@ -6,15 +6,12 @@ let sendButton;
 let userReq;
 //element selection
 let chatbody;
+let chatWindow;
 //msg attributes
 let urUsername;
 let msgCount = 0;
 //boolean checks
 let nameSubmitted = false;
-let timeLonger = false;
-let lastInterval, newInterval;
-let msgLonger = false;
-let lastLength, newLength;
 //sockets
 let socket;
 //data for loading past conversation
@@ -22,6 +19,12 @@ let newinfo;
 let messagecount;
 //info for incoming messages
 let newMsgData;
+let typoMessage = "";
+
+window.addEventListener('load', function () {
+  //get dom elements
+  chatWindow = document.getElementById('chatbody');
+});
 
 function setup() {
   noCanvas();
@@ -32,6 +35,7 @@ function setup() {
   nameInput.changed(updateName);
   //text conversation dom
   chatbody = select('chatbody');
+
   //request username
   userReq = createP('Submit your name to continue.');
   userReq.id('namealert');
@@ -41,12 +45,14 @@ function setup() {
   socket = io.connect("http://localhost:8000");
   //get broadcasted text & post to browser
   socket.on('chatmsg', function(data) {
-    let posttext = data.user + " (" + convertDate(data.time) + "): " + data.msg
+    let posttext = data.user + " (" + convertDate(data.time) + "): " + data.msg;
     let p = createP(posttext);
     chatbody.child(p);
+    chatWindow.scrollTo(0, chatWindow.scrollHeight);
   });
 }
 
+// newText adds to the chat body any new text that is in the message input form. this allows in our functioning the pasting of links or of other texts
 function newText() {
   if (trim(msgInput.value()) != "") {
     loadJSON('convo.json', updateJSON);
@@ -70,28 +76,27 @@ function newText() {
   return false;
 }
 
-function newText_stream(singleChar) {
-    if (singleChar != "") {
-      loadJSON('convo.json', updateJSON);
-      let message = singleChar//msgInput.value();
-      //create object of msg data
-      newMsgData = {
-        time: new Date().getTime() / 1000,
-        msg: message,
-        length: message.length,
-        user: urUsername
-      }
-      //   //emit to other viewers
-        socket.emit('chatmsg', newMsgData);
-      //   //post to chat
-        let posttext = newMsgData.user + " (" + convertDate(newMsgData.time) + "): " + newMsgData.msg;
-        let p = createP(posttext);
-        chatbody.child(p);
-        cleartext();
-      // }
-    }
-    return false;
+function newMessage(message){
+  loadJSON('convo.json', updateJSON);
+  newMsgData = {
+    time: new Date().getTime() / 1000,
+    msg: message,
+    length: message.length,
+    user: urUsername
   }
+  socket.emit('chatmsg', newMsgData);
+  let posttext = newMsgData.user + " (" + convertDate(newMsgData.time) + "): " + newMsgData.msg;
+  let p = createP(posttext);
+  chatbody.child(p);
+  cleartext();
+  chatWindow.scrollTo(0, chatWindow.scrollHeight);
+}
+
+function textStream(message,singleChar) {
+    message = message+singleChar//msgInput.value();
+    //create object of msg data
+    return message;
+}
 
 function updateJSON(data) {
   newinfo = data;
@@ -111,9 +116,7 @@ function getOldConvo(data) {
     let p = createP(posttext);
     chatbody.child(p);
   }
-  //calculate necessary info
-  lastInterval = newinfo[messagecount - 1].time - newinfo[messagecount - 2].time;
-  lastLength = newinfo[messagecount -1].length;
+  chatWindow.scrollTo(0, chatWindow.scrollHeight);
 }
 
 
@@ -126,14 +129,15 @@ function updateName() {
     msgInput = createElement('textarea', '')
     msgInput.id('msgInput');
     //create msg send button
-    sendButton = createButton('send');
-    sendButton.mouseClicked(newText);
-    sendButton.id('sendButton');
+    // sendButton = createButton('send');
+    // sendButton.mouseClicked(newText);
+    // sendButton.id('sendButton');
   }
   //enter key will trigger send
   function keyPressed() {
-    if (keyCode == ENTER && nameSubmitted == true) {
-      newText();
+    if (keyCode == ENTER && nameSubmitted == true&& typoMessage !="") {
+      // newText();
+      newMessage(typoMessage);
       return false;
     } 
  
@@ -141,7 +145,8 @@ function updateName() {
 
   function keyTyped(){
       if(nameSubmitted==true){
-        newText_stream(key);
+        // newText_stream(key);
+        typoMessage = textStream(typoMessage,key)
       }
   }
   
@@ -150,33 +155,11 @@ function updateName() {
     msgInput.remove();
     msgInput = createElement('textarea', '')
     msgInput.id('msgInput');
+    typoMessage = "";
   }
 
   //convert to date & time
 function convertDate(epochdate) {
     let myDate = new Date(epochdate * 1000);
     return myDate.toLocaleString();
-  }
-  
-  //convert seconds to appropriate time metric
-  function convertTime(seconds) {
-    let words;
-    if (seconds < 60) {
-      words = roundplace(seconds) + " seconds";
-    } else if (seconds >= 60 && seconds < 60 * 60) {
-      let minutes = seconds / 60;
-      words = roundplace(minutes) + " minutes";
-    } else if (seconds >= 60 * 60 && seconds < 60 * 60 * 24) {
-      let hours = seconds / 3600;
-      words = roundplace(hours) + " hours";
-    } else {
-      let days = seconds / (3600 * 24);
-      words = roundplace(days) + " days";
-    }
-    return words;
-  }
-  
-  //round to second decimal place
-  function roundplace(number){
-    return round(100*number)/100;
-  }
+}
