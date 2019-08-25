@@ -1,34 +1,58 @@
+/*the blue chatbox itself*/
 chatbody {
     position: absolute;
-    margin-left: 0px;
-    top: 150px;
-    background-color: #00e1ff;
-    width: 500px;
+    top: 200px;
+    right: 25%;
+    left: 25%;
+    width: 50%;
     height: 400px;
+    background-color: black;
     overflow: scroll;
+    padding: 10px;
+/*        opacity: 0.5;*/
     /* overflow-y: auto; */
     scroll-behavior: auto;    
   }
 
-
+/*text within chatbox*/
 chatbody p {
-    text-align: left;
-    color: yellow;
+    text-align: right;
+    font-family: 'VT323', monospace;
+    font-size: 125%;
+    color: #FF00FE;
     position: relative;
+    margin-left: auto;
     max-width: 500px;
     overflow-wrap: break-word;
-    padding: 2px 5px 5px 2px;
-    margin: 0;
+    padding: 0px 0px 0px 0px;
+/*    margin: 0;*/
   }
   
   chatbody::-webkit-scrollbar {
   -webkit-appearance: none;
-  width: 7px;
+  width: 10px;
   height: 0px;
 }
 
 chatbody::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: rgba(0, 0, 0, .5);
+  border-radius: px;
+  background-color: white;
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+h1 {
+    text-align: center;
+    color: #FF00FE;
+    font-size: 400%;
+    font-family: 'Major Mono Display', monospace;
+}
+
+body {
+    background-color: black;
+/*
+  background-image: url("superyacht.jpg");
+    background-repeat: no-repeat;
+background-position: top left;
+    background-size: 100%;
+*/
 }

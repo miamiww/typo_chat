@@ -31,7 +31,7 @@ function setup() {
   //username input
   nameInput = createInput('');
   nameInput.id('nameInput');
-  nameInput.size(120, 18);
+  nameInput.size(400, 30);
   nameInput.changed(updateName);
   //text conversation dom
   chatbody = select('chatbody');
