@@ -12,7 +12,7 @@ var Datastore = require('nedb');
 app.use(express.static('public'));
 
 app.get("/", function (request, response) {
-	  response.sendFile(__dirname + '/index.html');
+	  response.sendFile(__dirname +'/views'+'/index.html');
 });
 
 let convo, data;

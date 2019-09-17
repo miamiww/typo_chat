@@ -24,6 +24,8 @@ let typoMessage = "";
 window.addEventListener('load', function () {
   //get dom elements
   chatWindow = document.getElementById('chatbody');
+  msgInput = document.getElementById('msgInput');
+
 });
 
 function setup() {
@@ -126,8 +128,7 @@ function updateName() {
     nameInput.remove();
     userReq.remove();
     //create msg input
-    msgInput = createElement('textarea', '')
-    msgInput.id('msgInput');
+    msgInput.style.visibility = "visible";
     //create msg send button
     // sendButton = createButton('send');
     // sendButton.mouseClicked(newText);
