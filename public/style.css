@@ -49,12 +49,58 @@ h1 {
 
 body {
     background-color: black;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-family: 'Monaco', monospace;
+    color: #FF00FE;
 /*
   background-image: url("superyacht.jpg");
     background-repeat: no-repeat;
 background-position: top left;
     background-size: 100%;
 */
+}
+
+.mainpage {
+  /* background-color: yellow; */
+  position: absolute;
+  /* top: 200px; */
+  text-align: right;
+  right: 25%;
+  left: 25%;
+  top: 25%;
+  bottom: 25%;
+  /* height: 400px; */
+  /* background-image: url("superyacht.jpg");
+  background-repeat: no-repeat;
+background-position: top left;
+  background-size: 100%; */
+}
+
+.mainpage a{
+  color: hotpink;
+}
+
+.mainpage a:hover{
+  color: yellow;
+}
+
+#logo{
+  /* background: yellow; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  animation: blinker 2s linear infinite;
+
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }
 
 #msgInput {

@@ -15,6 +15,18 @@ app.get("/", function (request, response) {
 	  response.sendFile(__dirname +'/views'+'/index.html');
 });
 
+app.get("/chat", function (request, response) {
+  response.sendFile(__dirname +'/views'+'/public-chat.html');
+});
+
+app.get("/about", function (request, response) {
+  response.sendFile(__dirname +'/views'+'/about.html');
+});
+
+app.get("/therealdeal-chat", function (request, response) {
+  response.sendFile(__dirname +'/views'+'/secret-chat.html');
+});
+
 let convo, data;
 let exists = fs.existsSync('public/convo.json');
 if (exists) {

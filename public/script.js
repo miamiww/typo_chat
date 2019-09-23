@@ -21,10 +21,20 @@ let messagecount;
 let newMsgData;
 let typoMessage = "";
 
+//msg attributes
+let username;
+//load message history once
+let historyLoaded = false;
+//text area
+
 window.addEventListener('load', function () {
   //get dom elements
   chatWindow = document.getElementById('chatbody');
   msgInput = document.getElementById('msgInput');
+  let nameInput = document.getElementById('nameInput');
+  let nameAlert = document.getElementById('nameAlert');
+  let chatbody = document.getElementById('chatbody');
+  let sendButton = document.getElementById('sendButton');
 
 });
 
