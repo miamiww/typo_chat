@@ -27,41 +27,65 @@ let username;
 let historyLoaded = false;
 //text area
 
+
+//setting up the socket for local testing
+socket = io.connect("http://localhost:8000");
+//setting up socket for remote testing
+// socket = io.connect("http://prototypes.alden.website:8000")
+
+//get broadcasted text & post to browser
+
+
 window.addEventListener('load', function () {
   //get dom elements
   chatWindow = document.getElementById('chatbody');
   msgInput = document.getElementById('msgInput');
   let nameInput = document.getElementById('nameInput');
   let nameAlert = document.getElementById('nameAlert');
-  let chatbody = document.getElementById('chatbody');
+  chatbody = document.getElementById('chatbody');
   let sendButton = document.getElementById('sendButton');
 
-});
 
-function setup() {
-  noCanvas();
-  //username input
-  nameInput = createInput('');
-  nameInput.id('nameInput');
-  nameInput.size(400, 30);
-  nameInput.changed(updateName);
-  //text conversation dom
-  chatbody = select('chatbody');
+  nameInput.addEventListener('keyup', function (e) {
+    e.preventDefault();
+    if (e.keyCode === 13) {
+      if (nameInput.value != "") {
+        username = nameInput.value;
+        console.log('you are ' + username);
+        //remove username input field
+        nameInput.remove();
+        nameAlert.remove();
+        //show text areas
+        msgInput.style.visibility = "visible";
+        sendButton.style.visibility = "visible";
+      } else {
+        console.log("must submit text");
+      }
+    }
 
-  //request username
-  userReq = createP('Submit your name to continue.');
-  userReq.id('namealert');
-  //load initial JSONObject
-  loadJSON('convo.json', getOldConvo);
-  // socket io script
-  socket = io.connect("http://localhost:8000");
-  //get broadcasted text & post to browser
+    msgInput.addEventListener('keyup', function (e) {
+      if (e.keyCode === 13) {
+        e.preventDefault();
+        //remove extra new line
+        msgInput.value = msgInput.value.replace(/\n/g, '');
+        newMessage();
+      }
+    });
+    sendButton.addEventListener('click', newMessage, false);
+  })
+
   socket.on('chatmsg', function(data) {
     let posttext = data.user + " (" + convertDate(data.time) + "): " + data.msg;
     let p = createP(posttext);
     chatbody.child(p);
     chatWindow.scrollTo(0, chatWindow.scrollHeight);
   });
+});
+
+function setup() {
+  noCanvas();
+  loadJSON('convo.json', getOldConvo);
+
 }
 
 // newText adds to the chat body any new text that is in the message input form. this allows in our functioning the pasting of links or of other texts
@@ -81,7 +105,7 @@ function newText() {
     //   //post to chat
       let posttext = newMsgData.user + " (" + convertDate(newMsgData.time) + "): " + newMsgData.msg;
       let p = createP(posttext);
-      chatbody.child(p);
+      chatbody.appendChild(p);
       cleartext();
     // }
   }
@@ -99,7 +123,7 @@ function newMessage(message){
   socket.emit('chatmsg', newMsgData);
   let posttext = newMsgData.user + " (" + convertDate(newMsgData.time) + "): " + newMsgData.msg;
   let p = createP(posttext);
-  chatbody.child(p);
+  chatbody.appendChild(p);
   cleartext();
   chatWindow.scrollTo(0, chatWindow.scrollHeight);
 }
@@ -126,51 +150,58 @@ function getOldConvo(data) {
   for (let i = 1; i < messagecount; i++) {
     let posttext = newinfo[i].user + " (" + convertDate(newinfo[i].time) + "): " + newinfo[i].msg;
     let p = createP(posttext);
-    chatbody.child(p);
+    chatbody.appendChild(p);
   }
   chatWindow.scrollTo(0, chatWindow.scrollHeight);
 }
 
 
-function updateName() {
-    urUsername = nameInput.value();
-    nameSubmitted = true;
-    nameInput.remove();
-    userReq.remove();
-    //create msg input
-    msgInput.style.visibility = "visible";
-    //create msg send button
-    // sendButton = createButton('send');
-    // sendButton.mouseClicked(newText);
-    // sendButton.id('sendButton');
-  }
+
   //enter key will trigger send
-  function keyPressed() {
+function keyPressed() {
     if (keyCode == ENTER && nameSubmitted == true&& typoMessage !="") {
       // newText();
       newMessage(typoMessage);
       return false;
     } 
- 
-  }
+}
 
-  function keyTyped(){
-      if(nameSubmitted==true){
-        // newText_stream(key);
-        typoMessage = textStream(typoMessage,key)
-      }
+function keyTyped(){
+  if(nameSubmitted==true){
+    // newText_stream(key);
+    ypoMessage = textStream(typoMessage,key)
   }
+}
   
   //clear text/make new text area after sending text
-  function cleartext() {
-    msgInput.remove();
-    msgInput = createElement('textarea', '')
-    msgInput.id('msgInput');
-    typoMessage = "";
-  }
+function cleartext() {
+  msgInput.remove();
+  msgInput = createElement('textarea', '')
+  msgInput.id('msgInput');
+  typoMessage = "";
+}
 
   //convert to date & time
 function convertDate(epochdate) {
     let myDate = new Date(epochdate * 1000);
     return myDate.toLocaleString();
+}
+
+
+function sendMessage() {
+  //check if empty white space
+  if (msgInput.value.replace(/^\s+|\s+$|\s+(?=\s)/g, "") == "") {
+    console.log("error: cannot submit empty enter text!");
+  } else {
+    //create object w/ new message info
+    let newMessage = {
+      time: new Date().getTime() / 1000,
+      msg: msgInput.value,
+      length: msgInput.value.length,
+      user: username
+    }
+    // console.log(newMessage);
+    //send message to server
+    socket.emit('chatmsg', newMessage);
+  }
 }

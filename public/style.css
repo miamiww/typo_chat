@@ -93,26 +93,72 @@ background-position: top left;
   left: 50%;
   -ms-transform: translate(-50%,-50%);
   transform: translate(-50%,-50%);
-  animation: blinker 2s linear infinite;
+  animation: blinker 2s linear infinite, glow 2s ease-in-out infinite;
 
 }
 
 @keyframes blinker {
   50% {
-    opacity: 0;
+    opacity: .5;
   }
 }
 
 #msgInput {
   visibility: hidden;
   position: absolute;
-  left: 50%;
-  margin-left: -175px;
-  top: 500px;
-  width: 250px;
-  height: 100px;
+  /* left: 50%; */
+  /* margin-left: -175px; */
+  top: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+  height: 50px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
   resize: none;
+}
+
+#sendButton {
+  visibility: hidden;
+  position: absolute;
+  top: 635px;
+  left: 50%;
+  width: 70px;
+  height: 30px;
+  margin-left: 95px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.glow {
+  -webkit-animation: glow .5s ease-in-out infinite alternate ;
+  -moz-animation: glow .5s ease-in-out infinite alternate ;
+  animation: glow .5s ease-in-out infinite alternate ;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  }
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+  }
+}
+
+
+#nameInput {
+  height: 18px;
+  width: 120px;
+  position: relative;
+  top: 450px;
+}
+
+#nameAlert {
+  color: #FF00FE;
+  position: relative;
+  top: 400px;
+  padding: 0;
+  margin: 0;
 }
