@@ -1,5 +1,6 @@
-/*the blue chatbox itself*/
+/*the chatbox itself*/
 chatbody {
+    z-index: -1000;
     position: absolute;
     top: 200px;
     right: 25%;
@@ -54,12 +55,12 @@ body {
     text-align: center;
     font-family: 'Monaco', monospace;
     color: #FF00FE;
-/*
-  background-image: url("superyacht.jpg");
+
+    /* background-image: url("superyacht.jpg");
     background-repeat: no-repeat;
-background-position: top left;
-    background-size: 100%;
-*/
+    background-position: top left;
+    background-size: 100%; */
+
 }
 
 .mainpage {
@@ -106,8 +107,8 @@ background-position: top left;
 #msgInput {
   visibility: hidden;
   position: absolute;
-  /* left: 50%; */
-  /* margin-left: -175px; */
+  left: 50%;
+  margin-left: -175px;
   top: 650px;
   margin-left: auto;
   margin-right: auto;
@@ -133,9 +134,9 @@ background-position: top left;
 }
 
 .glow {
-  -webkit-animation: glow .5s ease-in-out infinite alternate ;
-  -moz-animation: glow .5s ease-in-out infinite alternate ;
-  animation: glow .5s ease-in-out infinite alternate ;
+  -webkit-animation: glow 2s ease-in-out infinite alternate ;
+  -moz-animation: glow 2s ease-in-out infinite alternate ;
+  animation: glow 2s ease-in-out infinite alternate ;
 }
 
 @-webkit-keyframes glow {
@@ -151,14 +152,26 @@ background-position: top left;
 #nameInput {
   height: 18px;
   width: 120px;
-  position: relative;
-  top: 450px;
+  /* position: relative; */
+  /* top: 450px; */
 }
 
 #nameAlert {
   color: #FF00FE;
-  position: relative;
-  top: 400px;
+  /* position: relative; */
+  /* top: 400px; */
   padding: 0;
   margin: 0;
+}
+
+.container {
+  position: relative;
+}
+
+.centered-element {
+  position: absolute;
+  left: 50%;
+  margin-left: -50px;
+  top: 50%;
+  margin-top: -50px;
 }
