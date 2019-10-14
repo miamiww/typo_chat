@@ -25,7 +25,7 @@ app.get("/about", function (request, response) {
   response.sendFile(__dirname +'/views'+'/about.html');
 });
 
-app.get("/therealdeal-chat", function (request, response) {
+app.get("/chat-therealdeal", function (request, response) {
   response.sendFile(__dirname +'/views'+'/secret-chat.html');
 });
 
@@ -37,30 +37,59 @@ let io = socket(server);
 // when new client connects
 io.sockets.on("connection", function (socket) {
   console.log("new connection: " + socket.id);
-  //variable for this socket's database & room
-  let db = new Datastore({
-    filename: "convo-public.db",
-    autoload: true
-  });
 
-  db.find({}).sort({ time: 1 }).exec(function (err, docs) {
-    if (err != null) {
-      console.log("err:" + err);
-    } else if (docs.length < 2) {
 
-    } else {
-      //send conversatino history to newly connected client
-      console.log("message history retreived");
-      socket.emit('convoHistory', docs);
-    }
-  });
+  let room;
+
+  //get url to get name of room
+  socket.on('url', function (data) {
+    room = data.substring(1);
+    console.log(socket.id + " in " + room);
+
+    //create simple database
+    let db = new Datastore({
+      filename: "convo-" + room + ".db",
+      autoload: true
+    });
+
+    // socket.join(room);
+
+    //query database all messages, sorted by time
+    db.find({}).sort({ time: 1 }).exec(function (err, docs) {
+      if (err != null) {
+        console.log("err:" + err);
+      } else if (docs.length < 2) {
+
+      } else {
+        //send conversatino history to newly connected client
+        console.log("message history retreived");
+        socket.emit('convoHistory', docs);
+      }
+    });
+  //variable for this socket's database
+  // let db = new Datastore({
+  //   filename: "convo-public.db",
+  //   autoload: true
+  // });
+
+  // db.find({}).sort({ time: 1 }).exec(function (err, docs) {
+  //   if (err != null) {
+  //     console.log("err:" + err);
+  //   } else if (docs.length < 2) {
+
+  //   } else {
+  //     //send conversation history to newly connected client
+  //     console.log("message history retreived");
+  //     socket.emit('convoHistory', docs);
+  //   }
+  // });
   
 
   //when server receives a message
   socket.on('chatmsg', function (data) {
     //reload database
     let db = new Datastore({
-      filename: "convo-public.db",
+      filename: "convo-" + room + ".db",
       autoload: true
     });
 
@@ -78,6 +107,31 @@ io.sockets.on("connection", function (socket) {
   socket.on('disconnect', function () {
     console.log("Client has disconnected " + socket.id);
   });
+
+});
+
+  // //when server receives a message
+  // socket.on('chatmsg-sec', function (data) {
+  //   //reload database
+  //   let db = new Datastore({
+  //     filename: "convo-private.db",
+  //     autoload: true
+  //   });
+
+  //   let errMsg = {
+  //     timeErr: false,
+  //     timeDifference: null,
+  //     lengthErr: false,
+  //     lengthDifference: null
+  //   }
+  //   emitMessage(data, db);
+  //   //query for longest message
+  // });
+
+  // //notify when user disconnects
+  // socket.on('disconnect', function () {
+  //   console.log("Client has disconnected " + socket.id);
+  // });
 
 });
 
