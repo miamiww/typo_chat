@@ -38,7 +38,6 @@ let io = socket(server);
 io.sockets.on("connection", function (socket) {
   console.log("new connection: " + socket.id);
 
-
   let room;
 
   //get url to get name of room
@@ -66,23 +65,6 @@ io.sockets.on("connection", function (socket) {
         socket.emit('convoHistory', docs);
       }
     });
-  //variable for this socket's database
-  // let db = new Datastore({
-  //   filename: "convo-public.db",
-  //   autoload: true
-  // });
-
-  // db.find({}).sort({ time: 1 }).exec(function (err, docs) {
-  //   if (err != null) {
-  //     console.log("err:" + err);
-  //   } else if (docs.length < 2) {
-
-  //   } else {
-  //     //send conversation history to newly connected client
-  //     console.log("message history retreived");
-  //     socket.emit('convoHistory', docs);
-  //   }
-  // });
   
 
   //when server receives a message
@@ -99,7 +81,7 @@ io.sockets.on("connection", function (socket) {
       lengthErr: false,
       lengthDifference: null
     }
-    emitMessage(data, db);
+    emitMessage(data, db,room);
     //query for longest message
   });
 
@@ -110,34 +92,11 @@ io.sockets.on("connection", function (socket) {
 
 });
 
-  // //when server receives a message
-  // socket.on('chatmsg-sec', function (data) {
-  //   //reload database
-  //   let db = new Datastore({
-  //     filename: "convo-private.db",
-  //     autoload: true
-  //   });
-
-  //   let errMsg = {
-  //     timeErr: false,
-  //     timeDifference: null,
-  //     lengthErr: false,
-  //     lengthDifference: null
-  //   }
-  //   emitMessage(data, db);
-  //   //query for longest message
-  // });
-
-  // //notify when user disconnects
-  // socket.on('disconnect', function () {
-  //   console.log("Client has disconnected " + socket.id);
-  // });
-
 });
 
-function emitMessage(data, db) {
+function emitMessage(data, db,room) {
   //send text message to all users (including the sender)
-  io.emit('chatmsg', data);
+  io.to(room).emit('chatmsg', data);
   // add to database
   db.insert(data, function (err, newDocs) {
     if (err != null) {
@@ -145,7 +104,5 @@ function emitMessage(data, db) {
     } else {
       console.log("incoming msg: " + newDocs.msg);
     }
-    //broadcast text message change to all users
-    // socket.broadcast.emit('chatmsg', data);
   });
 }
