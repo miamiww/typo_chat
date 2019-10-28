@@ -31,7 +31,6 @@ socket.on('chatmsg', function (data) {
     //clear input for current user
     msgInput.value = "";
   }
-
 });
 
 
@@ -94,6 +93,7 @@ function sendMessage() {
     // console.log(newMessage);
     //send message to server
     socket.emit('chatmsg', newMessage);
+    // postMessage(newMessage);
   }
 }
 
@@ -106,6 +106,10 @@ function postMessage(chatMsgObj) {
   chatbody.appendChild(p);
   //scroll to bottom
   chatbody.scrollTo(0, chatbody.scrollHeight);
+  if (username == chatMsgObj.user) {
+    //clear input for current user
+    msgInput.value = "";
+  }
 }
 
 function postError(errTxt) {

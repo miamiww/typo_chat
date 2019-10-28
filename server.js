@@ -19,7 +19,7 @@ var config = require('./email_config.js');
 console.log(config.user)
 
 // async..await is not allowed in global scope, must use a wrapper
-async function maildaemon() {
+async function maildaemon(room) {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
   let testAccount = await nodemailer.createTestAccount();
@@ -37,7 +37,7 @@ async function maildaemon() {
   let info = await transporter.sendMail({
       from: '"Typo Chat 👻" <typochat@yahoo.com>', // sender address
       to: 'rivendalejones@gmail.com, aqdinh@gmail.com', // list of receivers
-      subject: 'new message on typo chat', // Subject line
+      subject: 'new message on typo chat in '+room, // Subject line
       text: 'check http://prototypes.alden.website:8000', // plain text body
       html: '<b>check <a href="http://prototypes.alden.website:8000">here</a></b>' // html body
   });
@@ -94,7 +94,7 @@ io.sockets.on("connection", function (socket) {
       autoload: true
     });
 
-    // socket.join(room);
+    socket.join(room);
 
     //query database all messages, sorted by time
     db.find({}).sort({ time: 1 }).exec(function (err, docs) {
