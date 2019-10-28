@@ -39,7 +39,7 @@ async function maildaemon(room,user) {
       to: 'rivendalejones@gmail.com, aqdinh@gmail.com', // list of receivers
       subject: 'new message from ' + user+ ' in '+room, // Subject line
       text: 'check http://prototypes.alden.website:8000/'+room, // plain text body
-      html: '<b>check <a href="http://prototypes.alden.website:8000/"'+room+'>here</a></b>' // html body
+      html: '<b>check <a href="http://prototypes.alden.website:8000/'+room+'">here</a></b>' // html body
   });
 
   console.log('Message sent: %s', info.messageId);
