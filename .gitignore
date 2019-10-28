@@ -3,3 +3,4 @@ slownet
 .DS_Store
 convo.json
 anonymouse-realtime-chat-app
+*.db

@@ -7,7 +7,7 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
       <script src="script.js"></script>
-      <script src="chat.js"></script>
+      <!-- <script src="chat.js"></script> -->
 
       <link rel="stylesheet" type="text/css" href="style.css">
       <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display&display=swap" rel="stylesheet">
@@ -26,12 +26,18 @@
   <body>
 <!--      chat entry box-->
     <body>
-      <h1>Welcome to the Good Chat
+      <h1 >WelcoMe to tHe Good cHAt
         </h1>
-        <chatbody id="chatbody">
+    
+      <chatbody id="chatbody">
       </chatbody>
 
-      <textarea id="msgInput"></textarea>
 
+
+      <input id="nameInput" type="text">
+      <p id="nameAlert">Submit your name please</p>
+
+      <textarea id="msgInput"></textarea>
+      <button id="sendButton">send</button>
       </body>
 </html>
