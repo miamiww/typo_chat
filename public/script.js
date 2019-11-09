@@ -7,9 +7,9 @@ let historyLoaded = false;
 let msgInput;
 
 //setting up the socket for local testing
-socket = io.connect("http://localhost:8000");
+// socket = io.connect("http://localhost:8000");
 //setting up socket for remote testing
-// socket = io.connect("http://prototypes.alden.website:8000")
+socket = io.connect("http://prototypes.alden.website:8000")
 
 //get broadcasted text & post to browser
 //receive conversation history only once
@@ -31,7 +31,6 @@ socket.on('chatmsg', function (data) {
     //clear input for current user
     msgInput.value = "";
   }
-
 });
 
 
@@ -94,6 +93,7 @@ function sendMessage() {
     // console.log(newMessage);
     //send message to server
     socket.emit('chatmsg', newMessage);
+    // postMessage(newMessage);
   }
 }
 
@@ -106,6 +106,10 @@ function postMessage(chatMsgObj) {
   chatbody.appendChild(p);
   //scroll to bottom
   chatbody.scrollTo(0, chatbody.scrollHeight);
+  if (username == chatMsgObj.user) {
+    //clear input for current user
+    msgInput.value = "";
+  }
 }
 
 function postError(errTxt) {
