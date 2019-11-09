@@ -7,9 +7,9 @@ let historyLoaded = false;
 let msgInput;
 
 //setting up the socket for local testing
-socket = io.connect("http://localhost:8000");
+// socket = io.connect("http://localhost:8000");
 //setting up socket for remote testing
-// socket = io.connect("http://prototypes.alden.website:8000")
+socket = io.connect("http://prototypes.alden.website:8000")
 
 //get broadcasted text & post to browser
 //receive conversation history only once
