@@ -4,3 +4,4 @@ slownet
 convo.json
 anonymouse-realtime-chat-app
 *.db
+email_config.js
