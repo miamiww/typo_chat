@@ -12,6 +12,49 @@ let fs = require('fs');
 const url = require('url');
 var Datastore = require('nedb');
 
+/*email begin*/
+
+const nodemailer = require('nodemailer');
+var config = require('./email_config.js');
+console.log(config.user)
+
+// async..await is not allowed in global scope, must use a wrapper
+async function maildaemon(room,user) {
+  // Generate test SMTP service account from ethereal.email
+  // Only needed if you don't have a real mail account for testing
+  let testAccount = await nodemailer.createTestAccount();
+
+  // create reusable transporter object using the default SMTP transport
+
+  let transporter = nodemailer.createTransport({
+    service: 'yahoo', // no need to set host or port etc.
+    auth: {
+      user: config.user, 
+      pass: config.password
+    }
+  });
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+      from: '"Typo Chat 👻" <typochat@yahoo.com>', // sender address
+      to: 'rivendalejones@gmail.com, aqdinh@gmail.com', // list of receivers
+      subject: 'new message from ' + user+ ' in '+room, // Subject line
+      text: 'check http://prototypes.alden.website:8000/'+room, // plain text body
+      html: '<b>check <a href="http://prototypes.alden.website:8000/'+room+'">here</a></b>' // html body
+  });
+
+  console.log('Message sent: %s', info.messageId);
+  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+  // Preview only available when sending through an Ethereal account
+  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+}
+
+/* email end */
+
+
+//build routes
+
 
 app.get("/", function (request, response) {
 	  response.sendFile(__dirname +'/views'+'/index.html');
@@ -51,7 +94,7 @@ io.sockets.on("connection", function (socket) {
       autoload: true
     });
 
-    // socket.join(room);
+    socket.join(room);
 
     //query database all messages, sorted by time
     db.find({}).sort({ time: 1 }).exec(function (err, docs) {
@@ -82,8 +125,13 @@ io.sockets.on("connection", function (socket) {
       lengthDifference: null
     }
     emitMessage(data, db,room);
-    //query for longest message
+    //send out email
+    let userName = data.user;
+    maildaemon(room,userName).catch(console.error);
   });
+
+  
+
 
   //notify when user disconnects
   socket.on('disconnect', function () {
