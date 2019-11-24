@@ -1,8 +1,6 @@
 //set up express
 let express = require("express");
 let app = express();
-//demo local
-// let server = app.listen(8000);
 let server = app.listen(8000);
 app.use(express.static("public"));
 
@@ -19,12 +17,8 @@ var config = require('./email_config.js');
 
 // async..await is not allowed in global scope, must use a wrapper
 async function maildaemon(room,user) {
-  // Generate test SMTP service account from ethereal.email
-  // Only needed if you don't have a real mail account for testing
-  let testAccount = await nodemailer.createTestAccount();
-
+  let recipients = 'rivendalejones@gmail.com, aqdinh@gmail.com';
   // create reusable transporter object using the default SMTP transport
-
   let transporter = nodemailer.createTransport({
     service: 'yahoo', // no need to set host or port etc.
     auth: {
@@ -32,21 +26,20 @@ async function maildaemon(room,user) {
       pass: config.password
     }
   });
+  if(user == "alden"){
+    recipients = 'aqdinh@gmail.com';
+  }
+  if(user == "amelie"){
+    recipients = 'rivendalejones@gmail.com';
+  }
   // send mail with defined transport object
   let info = await transporter.sendMail({
-      from: '"Typo Chat 👻" <typochat@yahoo.com>', // sender address
-      to: 'rivendalejones@gmail.com, aqdinh@gmail.com', // list of receivers
+      from: '"Clubhouse Chat 👻" <typochat@yahoo.com>', // sender address
+      to: recipients, // list of receivers
       subject: 'new message from ' + user+ ' in '+room, // Subject line
       text: 'check http://prototypes.alden.website:8000/'+room, // plain text body
       html: '<b>check <a href="http://prototypes.alden.website:8000/'+room+'">here</a></b>' // html body
   });
-
-  console.log('Message sent: %s', info.messageId);
-  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-  // Preview only available when sending through an Ethereal account
-  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 }
 
 /* email end */
@@ -75,7 +68,7 @@ securedRoutes.use((req, res, next) => {
   // -----------------------------------------------------------------------
   // authentication middleware
 
-  const auth = {login: secureconfig.user, password: secureconfig.password} // change this
+  const auth = {login: secureconfig.user, password: secureconfig.password} 
 
   // parse login and password from headers
   const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
