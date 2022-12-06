@@ -10,7 +10,7 @@
   "author": "alden jones",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.3",
+    "express": "^4.18.2",
     "nedb": "^1.8.0",
     "nodemailer": "^6.3.1",
     "socket.io": "^2.2.0"
